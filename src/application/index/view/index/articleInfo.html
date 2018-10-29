@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="telephone=no" name="format-detection" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>文章详情</title>
+
+    <link rel="stylesheet" href="__ROOT__/static/weui/weui.min.css"/>
+    <link rel="stylesheet" href="__ROOT__/static/weui/weui_example.css"/>
+    <link rel="stylesheet" href="__ROOT__/static/styler/css/h5.web.css"/>
+
+    <style type="text/css">
+    	.page__bd { padding: 0 15px; line-height: 1.6; color: #333; font-size: 16px;}
+    	.page__ft { padding: 15px;}
+    	.page__ft .zan_num{ position: relative; top: -5px;}
+    	.page__ft .weui-media-box__info{ line-height: 20px;}
+    	.weui-media-box__info {margin-top: 10px; color: #888; font-size: 14px;}
+
+        #btn_zan {cursor:pointer;}
+        
+    	.icons {
+    		display: inline-block; width: 20px; height: 20px; 
+    		background-position: center; background-size: cover;
+    		position: relative; top: -1px;
+    	}
+    	.icons.zan_full{ background-image: url(__ROOT__/static/styler/images/zan_full.png)}
+    	.icons.zan_empty{ background-image: url(__ROOT__/static/styler/images/zan_empty.png)}
+    </style>
+</head>
+
+<body ontouchstart>
+    <div class="container">
+        <div class="page home js_show">
+        	<div class="page__hd">
+        		<h1 class="page__title"><{$info.title}></h1>
+                <ul class="weui-media-box__info">
+                    <li class="weui-media-box__info__meta" id="cate_item"><{$cateInfo.name}></li>
+                    <li class="weui-media-box__info__meta weui-media-box__info__meta_extra"><{$info.author}></li>
+                    <li class="weui-media-box__info__meta weui-media-box__info__meta_extra"><{$info.date_short}></li>
+                </ul>
+        	</div>
+
+        	<div class="page__bd"><{$info.content}></div>
+
+        	<div class="page__ft">
+                <{notempty name="tagList"}>
+                    <ul class="weui-media-box__info">
+                        <li class="weui-media-box__info__meta">标签：</li>
+                        <{volist name="tagList" id="tag"}>
+                            <li class="weui-media-box__info__meta tag_item" id="<{$tag.id}>"><{$tag.name}></li>
+                        <{/volist}>
+                    </ul>
+                <{/notempty}>
+
+        		<ul class="weui-media-box__info">
+                    <li class="weui-media-box__info__meta">阅读 <{$info.read_num}></li>
+                    <li class="weui-media-box__info__meta" id="btn_zan">
+                    	<i class="icons <{$zan_class}>"></i>
+                    	<span class="zan_num"><{$info.zan_num}></span>
+                    </li>
+                </ul>
+        	</div>
+        </div>
+    </div>
+
+    <script src="__ROOT__/static/styler/js/jquery-2.1.4.js"></script>
+	<script src="__ROOT__/static/styler/js/h5.web.js"></script>
+	<script type="text/javascript">
+		$(function(){
+            $("#cate_item").on("click", function(){
+                window.location.href="<{:url('articleList')}>?cate_id=<{$cateInfo.id}>";
+            });
+
+            $(".tag_item").on("click", function(){
+                window.location.href="<{:url('articleList')}>?tag_id=" + this.id;
+            });
+
+            $("#btn_zan").on("click", function(){
+            	if ($(this).find(".icons").hasClass("zan_empty")) {
+            		var _this = this;
+                    
+            		h5.ajax("<{:url('articleZan')}>", {
+            			data: {uuid: "<{$info.uuid}>"},
+            			success: function(result){
+            				if (result.res == 1) {
+            					$(_this).find(".icons").removeClass("zan_empty").addClass("zan_full");
+            					$(_this).find(".zan_num").html("<{$info.zan_num + 1}>");
+            				}
+            			}
+            		});
+            	}
+            });
+		});
+	</script>
+</body>
+</html>

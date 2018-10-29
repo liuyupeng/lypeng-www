@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>标签列表</title>
+
+	<{include file="public:loader,public:tables" /}>
+</head>
+<body class="animated fadeInRight">
+	<div class="content-box">
+		<div class="table-responsive">
+		    <table id="tableList">
+		        <thead>
+		            <tr>
+		                <th data-field="ids" data-align="center" data-checkbox="true"></th>
+		                <th data-field="index" data-align="center" data-formatter="h5.formatter.index" data-width="80">编号</th>
+		                <th data-field="name">标签名称</th>
+		                <th data-field="description">标签描述</th>
+		                <th data-field="pinyin_full" data-align="center">拼音全拼</th>
+		                <th data-field="pinyin_first" data-align="center">拼音简拼</th>
+		                <th data-field="date" data-visible="false" data-align="center">添加时间</th>
+		                <th data-field="dateline" data-align="center">更新时间</th>
+		            </tr>
+		        </thead>
+		    </table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	    $(function(){
+	        h5.initTable("#tableList", {
+	            url: "<?= Url('tagList')?>",
+	            toolbar: "#toolbarList",
+	            singleSelect: false
+	        });
+	    });
+
+	    function iframeCallback(){
+	    	var rows = $("#tableList").bootstrapTable("getSelections");
+	    	$("#tableList").bootstrapTable("uncheckAll");
+	    	return rows;
+	    }
+	</script>
+</body>
+</html>

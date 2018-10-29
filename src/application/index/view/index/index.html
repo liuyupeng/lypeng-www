@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="telephone=no" name="format-detection" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>行云刘水</title>
+
+    <link rel="stylesheet" href="__ROOT__/static/weui/weui.min.css"/>
+    <link rel="stylesheet" href="__ROOT__/static/weui/weui_example.css"/>
+    <link rel="stylesheet" href="__ROOT__/static/styler/css/h5.web.css"/>
+</head>
+
+<body ontouchstart>
+    <div class="container">
+        <div class="page home js_show">
+            <div class="page__hd">
+                <h1 class="h5-title">行云刘水</h1>
+                <p class="h5-desc">闲看庭前花开花落，漫随天外云卷云舒。</p>
+            </div>
+
+            <div class="page__bd">
+            <{volist name="list" id="li"}>
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__hd"><{$li.name}></div>
+
+                    <div class="weui-panel__bd">
+                    <{volist name="li.articleList" id="article"}>
+                        <div class="weui-media-box weui-media-box_text article_item" id="<{$article.uuid}>">
+                            <{notempty name="article['thumb']"}>
+                            <img src="<{$article.thumb}>" width="100%" onerror="this.remove();">
+                            <{/notempty}>
+                            <h4 class="weui-media-box__title"><{$article.title}></h4>
+                            <p class="weui-media-box__desc"><{$article.description}></p>
+                            <ul class="weui-media-box__info">
+                                <li class="weui-media-box__info__meta"><{$article.cateInfo.name}></li>
+                                <li class="weui-media-box__info__meta weui-media-box__info__meta_extra"><{$article.author}></li>
+                                <li class="weui-media-box__info__meta weui-media-box__info__meta_extra"><{$article.date_short}></li>
+                            </ul>
+                        </div>
+                    <{/volist}>
+                    </div>
+
+                    <div class="weui-panel__ft">
+                        <a href="<{:url('articleList')}>?cate_id=<{$li.id}>" class="weui-cell weui-cell_access weui-cell_link">
+                            <div class="weui-cell__bd">查看更多</div>
+                            <span class="weui-cell__ft"></span>
+                        </a>
+                    </div>
+                </div>
+            <{/volist}>
+            </div>
+        </div>
+    </div>
+	
+    <script src="__ROOT__/static/styler/js/jquery-2.1.4.js"></script>
+    <script src="__ROOT__/static/styler/js/h5.web.js"></script>
+	<script type="text/javascript">
+		$(function(){
+            $(".container").on("click", ".article_item", function(){
+                window.location.href="<{:url('articleInfo')}>?uuid=" + this.id;
+            });
+		});
+	</script>
+</body>
+</html>

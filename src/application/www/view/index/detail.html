@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><{$info.title}> - 行云刘水</title>
+    <meta name="description" content="<{$info.description}>" />
+    <meta name="keywords" content="随笔,开发者,程序猿,程序媛,编程,代码,IT网站,Developer,Programmer,Coder,技术社区" />
+    <{include file="public:styler" /}>
+
+    <style type="text/css">
+        .article-context ul,
+        .article-context ul li {
+            list-style: outside;
+        }
+
+    	.article-context,
+    	.article-context code {
+    		word-wrap:break-word!important;
+    		word-break: break-all!important;
+    	}
+
+        .article-next-priv {
+            font-size: 15px;
+            line-height: 1.75em;
+            padding: 0 10px 5px;
+        }
+
+        .article-next-priv_empty{
+            color: #8a8a8a;
+        }
+
+    	i.fa-thumbs-up,
+    	i.fa-thumbs-o-up {
+    		color: #1988F1; 
+    		font-size: 16px;
+    	}
+    </style>
+</head>
+<body class="position-fixed">
+	<{include file="public:html_header" /}>
+
+	<div class="container">
+        <!-- 右侧推荐 -->
+        <div class="container-right">
+            <{include file="public:html_right" /}>
+        </div>
+
+		<div class="container-content">
+			<div class="article_info" style="padding: 20px">
+				<div class="container-content_title"><{$info.title}></div>
+			
+				<div class="media-meta">
+					<span class="media-meta_item">
+						<a class="theme-color" href="<{:url('index')}>?cate_id=<{$cateInfo.id}>"><{$cateInfo.name}></a>
+					</span>
+                    <{notempty name="info.author"}>
+					   <span class="media-meta_item extra"><{$info.author}></span>
+                    <{/notempty}>
+					<span class="media-meta_item extra"><{$info.date_short}></span>
+				</div>
+
+				<div class="article-context" style="padding: 15px 8px; word-break: break-all!important;">
+					<{$info.content}>
+				</div>
+
+				<{notempty name="tagList"}>
+					<div class="media-meta">
+						<span class="media-meta_item">本文标签：</span>
+						<{volist name="tagList" id="tag"}>
+							<span class="media-meta_item">
+								<a href="<{:url('index')}>?tag_id=<{$tag.id}>"><{$tag.name}></a>
+							</span>
+						<{/volist}>
+					</div>
+				<{/notempty}>
+
+                <div class="article-next-priv">
+                    <{notempty name="prevInfo"}>
+                        <p>上一篇：<a href="<{:url('detail')}>?uuid=<{$prevInfo.uuid}>"><{$prevInfo.title}></a></p>
+                    <{else/}>
+                        <p>上一篇：<span class="article-next-priv_empty">没有了~</span></p>
+                    <{/notempty}>
+
+                    <{notempty name="nextInfo"}>
+                        <p>下一篇：<a href="<{:url('detail')}>?uuid=<{$nextInfo.uuid}>"><{$nextInfo.title}></a></p>
+                    <{else/}>
+                        <p>下一篇：<span class="article-next-priv_empty">没有了~</span></p>
+                    <{/notempty}>
+                </div>
+
+				<div class="media-meta" id="article_hot" style="display: none;">
+					<span class="media-meta_item">阅读 <{$info.read_num}></span>
+					<span class="media-meta_item extra" v-if="is_user_zan">
+						<i class="fa fa-thumbs-up"></i>&nbsp;{{zan_num}}
+					</span>
+					<span class="media-meta_item extra" style="cursor:pointer;" id="zan_btn" v-else>
+						<i class="fa fa-thumbs-o-up"></i>&nbsp;{{zan_num}}
+					</span>
+				</div>
+			</div>
+		</div>
+        
+        <div class="clear"></div>
+	</div>
+
+	<script type="text/javascript">
+        $(document).ready(function(){
+            var _VUE = new Vue({
+                el: "#article_hot",
+                data: {
+                	zan_num: parseInt("<{$info.zan_num}>"),
+                	is_user_zan: parseInt("<{$is_user_zan}>")
+                }
+            });
+
+            $("#article_hot").show();
+            $(".container").on("click", "#zan_btn", function(){
+        		$.ajax({
+        			type : "POST",
+                    dataType: "json",
+        			url: "<{:url('articleZan')}>",
+        			data: {uuid: "<{$info.uuid}>"},
+        			success: function(result){
+        				if (result.res == 1) {
+        					_VUE["zan_num"] += 1;
+        					_VUE["is_user_zan"] = 1;
+        				}
+        			}
+        		});
+            });
+        });
+    </script>
+</body>

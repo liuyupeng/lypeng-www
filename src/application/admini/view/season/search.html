@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>赛季列表</title>
+
+	<{include file="public:loader,public:tables,public:datepicker" /}>
+	<style type="text/css">
+		.datepicker { z-index: 9999!important; }
+	</style>
+</head>
+<body>
+	<div class="animated fadeInRight">
+		<div class="content-box">
+			<div class="alert alert-success"><b>赛季列表</b> <small>赛季在添加比赛记录后不可删除，删除后不可恢复。</small></div>
+
+			<div class="table-responsive">
+			    <div class="btn-group" id="toolbarList" role="group">
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doAdd()">
+			            <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 新增赛季
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doEdit()">
+			            <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> 编辑赛季信息
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doRemove()">
+			            <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> 删除赛季
+			        </button>
+			    </div>
+
+			    <table id="tableList">
+			        <thead>
+			            <tr>
+			                <th data-field="ids" data-align="center" data-checkbox="true"></th>
+			                <th data-field="index" data-align="center" data-formatter="h5.formatter.index" data-width="80">编号</th>
+			                <th data-field="name">名称</th>
+			                <th data-field="begin_date" data-align="center">开始时间</th>
+			                <th data-field="end_date" data-align="center">结束时间</th>
+			                <th data-field="date" data-align="center">添加时间</th>
+			                <th data-field="dateline" data-visible="true" data-align="center">更新时间</th>
+			            </tr>
+			        </thead>
+			    </table>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+
+	    $(function(){
+	        h5.initTable("#tableList", {
+	            url: "<?= Url('search')?>",
+	            toolbar: "#toolbarList",
+	            singleSelect: true
+	        });
+	    });
+
+	    var tableItems = {
+	    	doAdd: function(){
+	    		setDataForm({});
+	            $('#saveModal').modal('show');
+	    	},
+	        doEdit: function(){
+	            var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	            	setDataForm(rows[0]);
+	            	$('#saveModal').modal('show');
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        },
+	        doRemove: function(){
+	        	var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	            	$.confirm({
+	            		content: "确定要删除吗？",
+	            		confirm: function(){
+	            			h5.toast("正在操作...");
+			            	h5.ajax("<{:url('remove')}>", {
+			            		data: {id: rows[0]["id"]},
+			            		success: function(r){
+			            			if (r.res == 1) {
+			            				h5.success(r.msg);
+			            				$("#tableList").bootstrapTable("refresh");
+			            			} else {
+			            				h5.error(r.msg);
+			            			}
+			            		}
+			            	});
+	            		}
+	            	});
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        }
+	    };
+	</script>
+
+	<{include file="season:modal_save" /}>
+</body>
+</html>

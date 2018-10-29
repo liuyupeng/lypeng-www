@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>登录 - 行云刘水</title>
+
+        <link href="__ROOT__/static/fontawesome/font-awesome.min.css" rel="stylesheet">
+        <link href="__ROOT__/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="__ROOT__/static/jquery-confirm/jquery-confirm.css" rel="stylesheet">
+        <link href="__ROOT__/static/styler/css/style2.css" rel="stylesheet">
+        <link href="__ROOT__/static/styler/css/login.min.css" rel="stylesheet">
+
+        <script src="__ROOT__/static/bootstrap/js/jquery-1.11.3.min.js"></script>
+        <script src="__ROOT__/static/bootstrap/js/bootstrap.min.js"></script>
+        <script src="__ROOT__/static/jquery-confirm/jquery-confirm.js"></script>
+        <script src="__ROOT__/static/vue/vue.min.js"></script>
+        <script src="__ROOT__/static/styler/js/h5.wap.js"></script>
+
+        <script type="text/javascript">
+            if(window.top!==window.self){window.top.location=window.location};
+        </script>
+    </head>
+
+    <body style="background: url(__ROOT__/static/styler/images/hei-bg.png);">
+        <div class="signinpanel">
+            <div class="logo_name">LYPENG</div>
+            <form method="post" id="dataForm">
+                <h4 class="no-margins">登录到行云刘水</h4>
+                <input type="text" class="form-control uname" name="account" placeholder="账号" autocomplete="off" v-model="form_data.account" z-index="1" />
+                <input type="password" class="form-control pword m-b" placeholder="密码" autocomplete="off" v-model="form_data.password" z-index="2" />
+                <a href="javascript:$.alert('请联系管理员重置密码！', '忘记密码');">忘记密码了？</a>
+                <button type="button" class="btn btn-info btn-block" id="btn_submit" z-index="3">立 即 登 录</button>
+            </form>
+        </div>
+
+        <div class="signup-footer">
+            Copyright &copy; 2017 - <?= date("Y")?> All Rights Reserved.<br />
+            刘宇鹏[chenyu9205@163.com] 版权所有
+        </div>
+
+        <script type="text/javascript">
+            $(function(){
+                var _VUE = new Vue({
+                    el: "#dataForm",
+                    data: {
+                        form_data: {
+                            account: "",
+                            password: ""
+                        }
+                    }
+                });
+
+                function requestForm(){
+                    h5.ajax("<{:url('login')}>", {
+                        data: _VUE.form_data,
+                        success: function(result){
+                            if (result.res == 1) {
+                                window.location.href = "<{:url('index')}>?timestamp=<{:time()}>";
+                            } else {
+                                h5.error(result.msg);
+                            }
+                        }
+                    });
+                }
+
+                $("#btn_submit").click(requestForm);
+                $(document).keyup(function(e){
+                    if (e.keyCode == 13) {
+                        requestForm();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

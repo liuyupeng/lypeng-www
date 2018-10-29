@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>管理员</title>
+
+	<{include file="public:loader,public:tables" /}>
+</head>
+
+<body class="animated fadeInRight">
+	<div class="content-box" id="_VUE_BOX">
+		<div class="alert alert-success">
+			<b>管理员列表</b> <small>管理员删除后不可恢复。</small>
+			管理员初始密码为：<{$initPasswd}>
+		</div>
+	
+		<div class="table-responsive">
+		    <div class="btn-group" id="toolbarList" role="group">
+		        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doAdd()">
+		            <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 新增管理员
+		        </button>
+
+		        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doEdit()">
+		            <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> 编辑管理员信息
+		        </button>
+
+		        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doDelete()">
+		            <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> 删除管理员
+		        </button>
+
+		        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doInitPwd()">
+		            <i class="glyphicon glyphicon-retweet" aria-hidden="true"></i> 重置密码
+		        </button>
+		    </div>
+
+		    <table id="tableList">
+		        <thead>
+		            <tr>
+		                <th data-field="ids" data-align="center" data-checkbox="true"></th>
+		                <th data-field="index" data-align="center" data-formatter="h5.formatter.index" data-width="80">编号</th>
+		                <th data-field="account">账号</th>
+		                <th data-field="username">用户名</th>
+		                <th data-field="role_info.name">角色</th>
+		                <th data-field="description">用户备注</th>
+		                <th data-field="last_date" data-visible="false" data-align="center">上次登录</th>
+		                <th data-field="date" data-align="center">添加时间</th>
+		                <th data-field="dateline" data-visible="false" data-align="center">更新时间</th>
+		            </tr>
+		        </thead>
+		    </table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	    $(function(){
+	        h5.initTable("#tableList", {
+	            url: "<?= Url('search')?>",
+	            toolbar: "#toolbarList",
+	            singleSelect: true
+	        }, function(){
+
+	        });
+
+	        h5Notify.listen("admin_search_refresh", function(){
+	        	$("#tableList").bootstrapTable("refresh");
+	        });
+	    });
+
+	    var tableItems = {
+	        doAdd: function(){
+	        	h5View.open("<?= Url('add')?>", "新增管理员");
+	        },
+	        doEdit: function(){
+	            var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	        		h5View.open("<?= Url('edit')?>?id="+rows[0]["id"], "编辑管理员信息");
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        },
+	        doDelete: function(){
+	        	var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	            	$.confirm({
+	            		content: "确定要删除该管理员吗？",
+	            		confirm: function(){
+	            			h5.toast("正在操作...");
+			            	h5.ajax("<{:url('remove')}>", {
+			            		data: {id: rows[0]["id"]},
+			            		success: function(r){
+			            			if (r.res == 1) {
+			            				h5.success("操作成功");
+			            				$("#tableList").bootstrapTable("refresh");
+			            			} else {
+			            				h5.error(r.msg);
+			            			}
+			            		}
+			            	});
+	            		}
+	            	});
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        },
+	        doInitPwd: function(){
+	        	var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	            	$.confirm({
+	            		content: "确定要重置该管理员密码吗？",
+	            		confirm: function(){
+	            			h5.toast("正在操作...");
+			            	h5.ajax("<{:url('initPassword')}>", {
+			            		data: {id: rows[0]["id"]},
+			            		success: function(r){
+			            			if (r.res == 1) {
+			            				h5.success("管理员密码重置成功");
+			            			} else {
+			            				h5.error(r.msg);
+			            			}
+			            		}
+			            	});
+	            		}
+	            	});
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        }
+	    };
+	</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+    <div class="right-box">
+        <h3 class="widget-title">
+            <i class="fa fa-tags"></i>本站标签
+        </h3>
+
+        <div class="right-box-center">
+            <ul class="tag-box">
+                <{volist name="rightTagList" id="tag"}>
+                    <li class="tag-box_item">
+                        <a href="<{:url('index')}>?tag_id=<{$tag.id}>&timestamp=<{:time()}>"><{$tag.name}></a>
+                    </li>
+                <{/volist}>
+
+                <li class="clear"></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="right-box" id="personal-box">
+        <h3 class="widget-title">
+            <i class="fa fa-info-circle"></i>关于本站
+        </h3>
+
+        <div class="personal-box">
+            <div class="personal-box_qrcode">
+                <img src="__ROOT__/static/styler/images/qrcode_weixin.jpg" alt="">
+            </div>
+
+            <ul class="personal-box_info">
+                <li class="personal-box_info_item"><{$websiteConfig.author ?? ''}></li>
+                <li class="personal-box_info_item">QQ：<{$websiteConfig.QQ ?? ''}></li>
+                <li class="personal-box_info_item">Email：<{$websiteConfig.Email ?? ''}></li>
+                <li class="personal-box_info_item">微信扫描二维码进入公众号</li>
+            </ul>
+        </div>
+
+        <div class="copyright-box">
+            <p>©<{$websiteConfig.copyright ?? '2018 刘宇鹏'}> 版权所有</p>
+            <p class="copyright">
+                备案号：<a href="http://www.miitbeian.gov.cn" target="_blank"><{$websiteConfig.ICP ?? ''}></a>
+            </p>
+        </div>
+    </div>

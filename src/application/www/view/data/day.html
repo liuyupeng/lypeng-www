@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>时间轴</title>
+	<link href="__ROOT__/static/timeline/css/Smohan.blog.css" type="text/css" rel="stylesheet">
+	<style type="text/css">
+		* {
+			PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+		}
+
+		.item p.con {
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+</style>
+</head>
+<body>
+	<center style="padding: 20px;">
+		<h2>时光轴</h2>
+	</center>
+
+	<div id="Container">
+		<div class="timeline_container">
+			<div class="timeline">
+				<div class="plus"></div>
+				<div class="plus2"></div>
+			</div>
+		</div>
+
+		<div class="item">
+			<h3>
+				<span class="fl">纪念日</span> 
+				<span class="fr"><b><{$today}></b></span>
+			</h3>
+			<p class="con">这一天是来<{$city_name}>的第 <b><{$date_days}></b> 天。</p>
+		</div>
+
+		<div class="item">
+			<h3>
+				<span class="fl">纪念日</span>
+				<span class="fr"><b><{$date_begin}></b></span>
+			</h3>
+			<p class="con">这一天来到了<{$city_name}>。</p>
+		</div>
+	</div>
+
+
+	<script src="__ROOT__/static/timeline/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="__ROOT__/static/timeline/js/Smohan.blog.plug.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#Container').masonry({itemSelector : '.item'});
+			function Arrow_Points(){
+				var s = $("#Container").find(".item");
+				$.each(s,function(i,obj){
+					var posLeft = $(obj).css("left");
+					if(posLeft == "0px"){
+						html = "<span class='rightCorner'></span>";
+						$(obj).prepend(html);
+					} else {
+						html = "<span class='leftCorner'></span>";
+						$(obj).prepend(html);
+					}
+				});
+			}
+			Arrow_Points();
+		});
+</script>
+</body>
+</html>

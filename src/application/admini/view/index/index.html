@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>后台管理 - 行云刘水</title>
+
+    <link href="__ROOT__/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__ROOT__/static/fontawesome/font-awesome.min.css" rel="stylesheet">
+    <link href="__ROOT__/static/jquery-confirm/jquery-confirm.css" rel="stylesheet">
+    <link href="__ROOT__/static/styler/css/style.css" rel="stylesheet">
+
+    <style type="text/css">
+        .nav .nav-header { padding: 0; overflow: hidden; height: 60px;}
+        .nav .nav-header ul.dropdown-menu{ margin-left: 20px;}
+        .nav .nav-header .profile-element {padding: 5px 0; border-bottom: 1px solid #32414C;}
+        .nav .nav-header .log_name { text-align: center; line-height: 50px; font-size: 22px; color: #FFFFFF;}
+
+        .nav .left_menu {display: block; line-height: 40px; padding-left: 10px; font-size: 14px; background-color: #1F272B; border-bottom: 2px solid #32414C;}
+        #side-menu {padding-bottom: 103px;}
+    </style>
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <ul class="nav">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <div class="log_name">行云刘水</div>
+                    </div>
+                    <div class="logo-element">随笔</div>
+                </li>
+
+                <li class="left_menu">
+                    <span class="nav-label">功能菜单</span>
+                </li>
+            </ul>
+
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <?php foreach($menu_list as $key => $menu):?>
+                        <li class="menu_li">
+                            <a href="javascript:void(0);">
+                                <i class="fa fa-<?= $menu['icon']?>"></i>
+                                <span class="nav-label"><?= $menu["name"]?></span>
+                                <span class="fa arrow"></span>
+                            </a>
+                            <ul class="nav nav-second-level">
+                                <?php foreach($menu["children"] as $k => $li):?>
+                                    <li>
+                                        <a class="J_menuItem" _href="<?= $li['link']?>" target="iframe0">
+                                        <i class="fa fa-<?= $li['icon']?>"></i><?= $li["name"]?>
+                                        </a>
+                                    </li>
+                                <?php endforeach;?>
+                            </ul>
+                        </li>
+                    <?php endforeach;?>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="javascript:void(0);">
+                            <i class="fa fa-bars"></i>
+                        </a>
+
+                        <a href="javascript:void(0);" class="hidden-xs" style="line-height: 60px;padding-left: 15px; color: #9A9791; cursor: text;">
+                            欢迎您，<?= $userinfo['username'] ?>（<?= $userinfo['account'] ?>）
+                        </a>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li class="hidden-xs">
+                            <a href="http://www.liuyupeng.top" target="_blank" title="打开首页">
+                                <i class="fa fa-home"></i><span class="hidden-sm">打开首页</span>
+                            </a>
+                        </li>
+
+                        <li class="hidden-xs">
+                            <a href="javascript:contabsOpen('<{:url('editPassword')}>', '修改密码')" target="iframe0" title="修改密码">
+                                <i class="fa fa-pencil-square"></i><span class="hidden-sm">修改密码</span>
+                            </a>
+                        </li>
+
+                        <li class="hidden-xs">
+                            <a href="<{:url('logout')}>" title="安全退出">
+                                <i class="fa fa-sign-out"></i><span class="hidden-sm">安全退出</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="row content-tabs">
+                <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+                </button>
+                <nav class="page-tabs J_menuTabs">
+                    <div class="page-tabs-content">
+                        <a href="javascript:;" class="active J_menuTab" data-id="default_home">首页</a>
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+                </button>
+                <div class="btn-group roll-nav roll-right">
+                    <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+
+                    </button>
+                    <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                        <li class="J_tabShowActive"><a>定位当前选项卡</a></li>
+                        <li class="divider"></li>
+                        <li class="J_tabCloseAll"><a>关闭全部选项卡</a></li>
+                        <li class="J_tabCloseOther"><a>关闭其他选项卡</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row J_mainContent" id="content-main">
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="<{:url('welcome')}>" frameborder="0" seamless data-id="default_home"></iframe>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+
+    <script src="__ROOT__/static/bootstrap/js/jquery-1.11.3.min.js"></script>
+    <script src="__ROOT__/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__ROOT__/static/metisMenu/jquery.metisMenu.js"></script>
+    <script src="__ROOT__/static/jquery-confirm/jquery-confirm.js"></script>
+    <script src="__ROOT__/static/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="__ROOT__/static/layer/layer.min.js"></script>
+    <script src="__ROOT__/static/styler/js/style.js"></script>
+    <script src="__ROOT__/static/styler/js/contabs.js"></script>
+    <script src="__ROOT__/static/styler/js/pace.min.js"></script>
+    <script src="__ROOT__/static/styler/js/h5.wap.js"></script>
+</body>
+</html>

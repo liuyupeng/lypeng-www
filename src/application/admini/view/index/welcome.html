@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>欢迎页</title>
+
+	<{include file="public:loader" /}>
+</head>
+<body class="animated fadeInRight">
+	<div class="content-box">
+		<div class="ibox float-e-margins">
+		    <div class="ibox-title">
+		        <h5>行云流水 <small>分享我的经历、随笔、行业经验</small></h5>
+		    </div>
+
+		    <div class="ibox-content">
+		    	随笔,开发者,程序猿,程序媛,编程,代码,IT网站,Developer,Programmer,Coder,技术社区
+		    </div>
+		</div>
+
+		<div class="row">
+ 			<div class="col-sm-3">
+				<div class="panel panel-default">
+				    <div class="panel-heading">文章</div>
+				    <div class="panel-body">
+				        <h1 class="no-margins"><{$article_count}></h1>
+			            <small>总数量</small>
+
+			            <div class="stat-percent text-navy">
+			            	<a data-href="<{:url('article/articleList')}>" data-title="文章列表">
+			            		去看看 <i class="fa fa-level-up"></i>
+			            	</a>
+			            </div>
+				    </div>
+				</div>
+		    </div>
+
+		    <div class="col-sm-3">
+				<div class="panel panel-default">
+				    <div class="panel-heading">文章栏目</div>
+				    <div class="panel-body">
+				        <h1 class="no-margins"><{$category_count}></h1>
+			            <small>总数量</small>
+			            <div class="stat-percent text-navy">
+			            	<a data-href="<{:url('article/cateList')}>" data-title="栏目列表">
+			            		去看看 <i class="fa fa-level-up"></i>
+			            	</a>
+			            </div>
+				    </div>
+				</div>
+		    </div>
+
+			<div class="col-sm-3">
+				<div class="panel panel-default">
+				    <div class="panel-heading">文章标签</div>
+				    <div class="panel-body">
+				        <h1 class="no-margins"><{$tag_count}></h1>
+			            <small>总数量</small>
+			            <div class="stat-percent text-navy">
+			            	<a data-href="<{:url('tag/tagList')}>" data-title="标签列表">
+			            		去看看 <i class="fa fa-level-up"></i>
+			            	</a>
+			            </div>
+				    </div>
+				</div>
+		    </div>
+		</div>
+
+		<div class="row">
+		    <div class="col-sm-3">
+				<div class="panel panel-default">
+				    <div class="panel-heading">管理员</div>
+				    <div class="panel-body">
+				        <h1 class="no-margins"><{$admin_count}></h1>
+			            <small>总数量</small>
+			            <div class="stat-percent text-navy">
+			            	<a data-href="<{:url('admin/search')}>" data-title="管理员">
+			            		去看看 <i class="fa fa-level-up"></i>
+			            	</a>
+			            </div>
+				    </div>
+				</div>
+		    </div>
+
+		    <div class="col-sm-3">
+				<div class="panel panel-default">
+				    <div class="panel-heading">管理员角色</div>
+				    <div class="panel-body">
+				        <h1 class="no-margins"><{$admin_role_count}></h1>
+			            <small>总数量</small>
+			            <div class="stat-percent text-navy">
+			            	<a data-href="<{:url('admin/role')}>" data-title="角色管理">
+			            		去看看 <i class="fa fa-level-up"></i>
+			            	</a>
+			            </div>
+				    </div>
+				</div>
+		    </div>
+		</div>
+	</div>
+
+	<script language="Javascript">
+	    document.onselectstart = new Function("event.returnValue=false");
+
+	    $(".text-navy").on("click", "a", function(){
+			var href = $(this).data("href");
+			var title = $(this).data("title");
+
+			h5View.open(href, title);
+		});
+	</script>
+</body>
+</html>

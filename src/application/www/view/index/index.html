@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>行云刘水 - 分享我的经历、随笔、行业经验</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="随笔,开发者,程序猿,程序媛,编程,代码,IT网站,Developer,Programmer,Coder,技术社区" />
+    <{include file="public:styler" /}>
+</head>
+<body class="position-fixed">
+    <{include file="public:html_header" /}>
+
+    <div class="container">
+        <!-- 左侧列表 -->
+        <div class="container-left">
+            <{include file="public:html_catemenu" /}>
+        </div>
+        
+        <div class="container-center">
+            <div class="label"><{$title}> | <small><{$description}></small></div>
+            <ul class="media-box" id="itemList" style="display: none;" v-if="articleList.length">
+                <li class="media-item" v-for="item in articleList">
+                    <div class="media-item-img" v-if="item.thumb">
+                        <img v-bind:src="item.thumb" />
+                    </div>
+
+                    <div class="media-item-info">
+                        <h3 class="media-item-info_title">
+                            <a target="_blank" v-bind:href="'<{:url('detail')}>?uuid=' + item.uuid">{{item.title}}</a>
+                        </h3>
+                        <p class="media-item-info_desc">{{item.description}}</p>
+                        <div class="media-item-info_meta">
+                            <span class="media-item-info_meta_item">
+                                <a class="theme-color" v-bind:href="'<{:url('index')}>?cate_id=' + item.cate_id" >{{item.cate_info.name}}</a>
+                            </span>
+                            <span class="media-item-info_meta_item extra" v-if="item.author">{{item.author}}</span>
+                            <span class="media-item-info_meta_item extra">{{item.date_short}}</span>
+
+                            <div class="pull-right">
+                                <span class="media-item-info_meta_item">阅读 {{item.read_num}}</span>
+                                <span class="media-item-info_meta_item extra">赞 {{item.zan_num}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="media-box" v-else>
+                <li class="media-item_empty">暂时没有内容哦</li>
+            </ul>
+            
+            <div class="more_box_loaded" v-if="has_more">
+                <i class="fa fa-angle-double-down"></i> 点击加载更多
+            </div>
+        </div>
+
+        <!-- 右侧推荐 -->
+        <div class="container-right">
+            <{include file="public:html_right" /}>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <script type="text/javascript">
+        var _VUE = {};
+        $(document).ready(function(){
+            _VUE = new Vue({
+                el: ".container-center",
+                data: {
+                    is_loading: false,
+                    articleList: <{$articleList}>,
+                    has_more: parseInt("<{$has_more}>"),
+                    form_data: {
+                        page: 1,
+                        tag_id: "<{$tag_id ?? ''}>",
+                        cate_id: "<{$left_cate_id ?? ''}>",
+                        keywords: "<{$keywords ?? ''}>"
+                    }
+                }
+            });
+
+            $("#itemList").show();
+            $(".container-center").on("click", ".more_box_loaded", function(){
+                modList.doLoadMore();
+            });
+        });
+
+        var modList = {
+            doRequest: function(callback){
+                if (_VUE["is_loading"] == true) return false;
+
+                _VUE["has_more"] = 0;
+                _VUE["is_loading"] = true;
+                $.ajax({
+                    type : "POST",
+                    dataType: "json",
+                    data: _VUE["form_data"],
+                    url: "<{:url('index')}>",
+                    success: function(result){
+                        callback(result.data.data);
+                        _VUE["is_loading"] = false;
+                        $("#more_box_loading").hide();
+                        _VUE["has_more"] = parseInt(result["data"]["has_more"]);
+                    }
+                });
+            },
+            doRebind: function(){
+                _VUE["form_data"]["page"] = 1;
+                this.doRequest(function(data){
+                    $("#itemList").show();
+                    _VUE["articleList"] = data;
+                });
+            },
+            doLoadMore: function(){
+                _VUE["form_data"]["page"]++;
+                this.doRequest(function(data){
+                    for (var i in data) {
+                        _VUE["articleList"].push(data[i]);
+                    }
+                });
+            }
+        };
+    </script>
+</body>
+</html>

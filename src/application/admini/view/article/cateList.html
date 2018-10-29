@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>文章栏目列表</title>
+
+	<{include file="public:loader,public:tables,public:treegrid" /}>
+</head>
+<body>
+	<div class="animated fadeInRight">
+		<div class="content-box">
+			<div class="alert alert-success"><b>栏目列表</b> <small>栏目被使用后不能删除，删除后不可恢复。</small></div>
+			<div class="table-responsive m-b">
+			    <div class="btn-group" id="toolbarList" role="group">
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doAdd()">
+			            <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 新增栏目
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doEdit()">
+			            <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> 编辑栏目信息
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doDelete()">
+			            <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> 删除栏目
+			        </button>
+			    </div>
+
+			    <table id="tableList">
+			        <thead>
+			            <tr>
+			                <th data-field="ids" data-align="center" data-checkbox="true"></th>
+			                <!-- <th data-field="index" data-align="center" data-formatter="h5.formatter.index" data-width="80">编号</th> -->
+			                <th data-field="name" data-width="40%">栏目名称</th>
+			                <!-- <th data-field="parent_id" data-formatter="tableItems.parentName">所属栏目</th> -->
+			                <th data-field="description">栏目描述</th>
+			                <th data-field="listorder" data-align="center">排序</th>
+			                <th data-field="date" data-align="center">添加时间</th>
+			                <th data-field="dateline" data-visible="false" data-align="center">更新时间</th>
+			                <th data-field="disabled" data-align="center" data-formatter="h5.formatter.disabled">状态</th>
+			            </tr>
+			        </thead>
+			    </table>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	    $(function(){
+	        h5.initTable("#tableList", {
+	            url: "<?= Url('cateList')?>",
+	            toolbar: "#toolbarList",
+	            singleSelect: true,
+	            pagination: false,
+	            showToggle: false,
+	            idField: "id",
+	            treeView: true,
+                treeId: "id",
+                treeField: "name",
+                treeRootLevel: 1,
+                treeCollapseAll: false
+	        });
+
+	        h5Notify.listen("cate_list_refresh", function(){
+	        	$("#tableList").bootstrapTable("refresh");
+	        });
+	    });
+
+	    var tableItems = {
+	    	parentName: function(v,r,i){
+	    		return r.parent_info ? r.parent_info.name : "--";
+	    	},
+	        doAdd: function(){
+	        	h5View.open("<?= Url('cateAdd')?>", "新增栏目");
+	        },
+	        doEdit: function(){
+	            var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	            	h5View.open("<?= Url('cateEdit')?>?id="+rows[0]["id"], "编辑栏目信息");
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        },
+	        doDelete: function(){
+	        	var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	            	$.confirm({
+	            		content: "确定要删除吗？",
+	            		confirm: function(){
+	            			h5.toast("正在操作...");
+			            	h5.ajax("<{:url('cateRemove')}>", {
+			            		data: {id: rows[0]["id"]},
+			            		success: function(r){
+			            			if (r.res == 1) {
+			            				h5.success(r.msg);
+			            				$("#tableList").bootstrapTable("refresh");
+			            			} else {
+			            				h5.error(r.msg);
+			            			}
+			            		}
+			            	});
+	            		}
+	            	});
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        }
+	    };
+	</script>
+</body>
+</html>

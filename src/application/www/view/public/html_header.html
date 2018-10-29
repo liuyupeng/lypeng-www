@@ -1,0 +1,37 @@
+    <header>
+        <div class="nav">
+            <div class="nav-logo">
+                <a href="<{:url('index')}>?timestamp=<{:time()}>">
+                	<img src="__ROOT__/static/styler/images/logo1.png">
+                </a>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="<{:$nav_cate_id == 0 ? 'active' : ''}>">
+                    <a href="<{:url('index')}>?timestamp=<{:time()}>">
+                        综合
+                    </a>
+                </li>
+
+                <{volist name="navCateList" id="cate"}>
+                    <li class="<{:$nav_cate_id == $cate.id ? 'active' : ''}>">
+                        <a href="<{:url('index')}>?cate_id=<{$cate.id}>&timestamp=<{:time()}>">
+                            <{$cate.name}>
+                        </a>
+                    </li>
+                <{/volist}>
+            </ul>
+            
+            <ul class="nav-search">
+                <li class="search_bar">
+                    <input type="text" autocomplete="off" placeholder="搜索" class="search_keywords" />
+                    <span class="fa fa-search search_btn"></span>
+                </li>
+            </ul>
+            <div class="clear"></div>
+        </div>
+    </header>
+
+    <div class="scroll-topp">
+        <i class="fa fa-angle-up"></i>
+    </div>

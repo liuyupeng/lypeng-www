@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>编辑比赛记录</title>
+
+	<{include file="public:loader" /}>
+</head>
+<body class="animated fadeInRight">
+	<div class="content-box">
+		<div class="alert alert-warning">注：赛季、球队、球员必选，数据可留空。</div>
+		<div class="ibox float-e-margins">
+		    <div class="ibox-title">
+		        <h5>编辑比赛记录 <small></small></h5>
+		    </div>
+
+		    <div class="ibox-content">
+		        <form role="form" id="dataForm">
+		        	<div class="row m-t-md">
+			        	<div class="form-group col-sm-4">
+			                <label>所属赛季</label>
+			                <select class="form-control" v-model="form_data.season_id">
+			                	<option value="">请选择赛季</option>
+			                	<{volist name="season_list" id="season"}>
+			                		<option value="<{$season.id}>"><{$season.name}></option>
+			                	<{/volist}>
+			                </select>
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>所属球队</label>
+			                <select class="form-control" v-model="form_data.team_id">
+			                	<option value="">请选择球队</option>
+			                	<{volist name="team_list" id="team"}>
+			                		<option value="<{$team.id}>"><{$team.name}></option>
+			                	<{/volist}>
+			                </select>
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>所属球员</label>
+			                <select class="form-control" v-model="form_data.player_id">
+			                	<option value="">请选择球员</option>
+			                	<{volist name="player_list" id="player"}>
+			                		<option value="<{$player.id}>"><{$player.name}></option>
+			                	<{/volist}>
+			                </select>
+			            </div>
+			        </div>
+
+			        <div class="row m-t-md">
+			        	<div class="form-group col-sm-4">
+			                <label>出场次数</label>
+			                <input type="number" placeholder="请输入出场次数" class="form-control" autocomplete="off" v-model="form_data.come_num" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>首发次数</label>
+			                <input type="number" placeholder="请输入首发次数" class="form-control" autocomplete="off" v-model="form_data.come_first" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>场均时间</label>
+			                <input type="number" placeholder="请输入场均时间" class="form-control" autocomplete="off" v-model="form_data.minute_num" min="0" />
+			            </div>
+			        </div>
+
+			        <div class="row m-t-md">
+			        	<div class="form-group col-sm-4">
+			                <label>场均篮板</label>
+			                <input type="number" placeholder="请输入场均篮板" class="form-control" autocomplete="off" v-model="form_data.board_num" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>前场篮板</label>
+			                <input type="number" placeholder="请输入前场篮板" class="form-control" autocomplete="off" v-model="form_data.board_attack" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>后场篮板</label>
+			                <input type="number" placeholder="请输入后场篮板" class="form-control" autocomplete="off" v-model="form_data.board_defense" min="0" />
+			            </div>
+			        </div>
+
+			        <div class="row m-t-md">
+			        	<div class="form-group col-sm-4">
+			                <label>投篮命中率</label>
+			                <input type="number" placeholder="请输入投篮命中率" class="form-control" autocomplete="off" v-model="form_data.shoot_rate" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>三分命中率</label>
+			                <input type="number" placeholder="请输入三分命中率" class="form-control" autocomplete="off" v-model="form_data.three_rate" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>罚球命中率</label>
+			                <input type="number" placeholder="请输入罚球命中率" class="form-control" autocomplete="off" v-model="form_data.free_rate" min="0" />
+			            </div>
+			        </div>
+
+			        <div class="row m-t-md">
+			        	<div class="form-group col-sm-4">
+			                <label>场均助攻</label>
+			                <input type="number" placeholder="请输入场均助攻" class="form-control" autocomplete="off" v-model="form_data.assists" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>场均抢断</label>
+			                <input type="number" placeholder="请输入场均抢断" class="form-control" autocomplete="off" v-model="form_data.steals" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>场均封盖</label>
+			                <input type="number" placeholder="请输入场均封盖" class="form-control" autocomplete="off" v-model="form_data.block" min="0" />
+			            </div>
+			        </div>
+
+			        <div class="row m-t-md">
+			        	<div class="form-group col-sm-4">
+			                <label>场均失误</label>
+			                <input type="number" placeholder="请输入场均失误" class="form-control" autocomplete="off" v-model="form_data.anerror" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>场均犯规</label>
+			                <input type="number" placeholder="请输入场均犯规" class="form-control" autocomplete="off" v-model="form_data.foul" min="0" />
+			            </div>
+
+			            <div class="form-group col-sm-4">
+			                <label>场均得分</label>
+			                <input type="number" placeholder="请输入场均得分" class="form-control" autocomplete="off" v-model="form_data.score" min="0" />
+			            </div>
+			        </div>
+
+		            <div class="m-t-md">
+		                <button class="btn btn-sm btn-info" type="button" onclick="formItem.doRequest()">
+		                	<strong>确 认 提 交</strong>
+		                </button>
+		            </div>
+		        </form>
+		    </div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var _VUE = {};
+		$(document).ready(function(){
+			_VUE = new Vue({
+				el: "#dataForm",
+				data: {
+					form_data: {
+						id: "<{$info.id ?? ''}>",
+						season_id: "<{$info.season_id ?? ''}>",
+						player_id: "<{$info.player_id ?? ''}>",
+						team_id: "<{$info.team_id ?? ''}>",
+						come_num: "<{$info.come_num ?? ''}>",
+						come_first: "<{$info.come_first ?? ''}>",
+						minute_num: "<{$info.minute_num ?? ''}>",
+						board_num: "<{$info.board_num ?? ''}>",
+						board_attack: "<{$info.board_attack ?? ''}>",
+						board_defense: "<{$info.board_defense ?? ''}>",
+						shoot_rate: "<{$info.shoot_rate ?? ''}>",
+						three_rate: "<{$info.three_rate ?? ''}>",
+						free_rate: "<{$info.free_rate ?? ''}>",
+						assists: "<{$info.assists ?? ''}>",
+						steals: "<{$info.steals ?? ''}>",
+						block: "<{$info.block ?? ''}>",
+						anerror: "<{$info.anerror ?? ''}>",
+						foul: "<{$info.foul ?? ''}>",
+						score: "<{$info.score ?? ''}>"
+					}
+				}
+			});
+		});
+
+		var formItem = {
+			init: function(){
+			},
+			doRequest: function(){
+				h5.toast("正在处理请求...");
+				h5.ajax("<?= url('save')?>", {
+					data: _VUE.form_data,
+					success: function(result){
+						if (result.res == 1) {
+							h5Notify.publish("game_log_search_refresh");
+							h5View.close();
+						} else {
+							h5.error(result.msg);
+						}
+					}
+				});
+			}
+		};
+	</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title><{$title}></title>
+	<link href="__ROOT__/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="__ROOT__/static/styler/css/animate.min.css" rel="stylesheet">
+	<style type="text/css">
+    	body {
+            padding-bottom: 10px;
+            overflow-x: hidden!important;
+        }
+    </style>
+</head>
+<body class="animated fadeInRight">
+	<div class="container" style="padding-top: 30px;">
+		<div class="site-error">
+		    <h3><{$title}></h3>
+		    <div class="alert alert-danger"><{$content}></div>
+		    <p>应用程序在处理您的请求时发生上述错误。</p>
+		    <p>如果您认为这是一个服务器错误请联系我们，谢谢。</p>
+		</div>
+	</div>
+</body>
+</html>

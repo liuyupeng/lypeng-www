@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Hello小铁匠</title>
+    <link rel="stylesheet" href="__ROOT__/static/styler/css/www/base.css?time_stamp=<{:time()}>" type="text/css">
+    <link rel="stylesheet" href="__ROOT__/static/styler/css/www/index.css" type="text/css">
+    <link rel="stylesheet" href="__ROOT__/static/styler/iconfont/iconfont.css" type="text/css">
+
+    <script src="__ROOT__/static/styler/js/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="nav">
+            <div class="nav-logo">
+                <a href="<{:url('index')}>">
+                	<img src="__ROOT__/static/styler/images/logo1.png">
+                </a>
+            </div>
+
+            <ul class="nav-menu">
+                <li>
+                    <a href="">
+                    	栏目名称
+                    </a>
+                </li>
+
+                <li>
+                    <a href="">
+                    	栏目名称
+                    </a>
+                </li>
+
+                <li>
+                    <a href="">
+                    	栏目名称
+                    </a>
+                </li>
+
+                <li>
+                    <a href="">
+                    	栏目名称
+                    </a>
+                </li>
+            </ul>
+            
+            <ul class="nav-user">
+                <li><a href="javascript:alert('暂未开启');"><span class="iconfont icon-search"></span></a></li>
+                <li><a href="javascript:alert('暂未开启');">登录</a></li>
+                <li><a href="javascript:alert('暂未开启');">注册</a></li>
+            </ul>
+            <div class="clear"></div>
+        </div>
+    </header>
+
+    <div class="content">
+        <!-- 左侧列表 -->
+        <div class="content-left">
+            <ul class="article_list" id="article_list">
+                <!-- <li class="article_first">
+                    <div class="article_img"><img src="__ROOT__/static/styler/images/login-background.jpg"></div>
+                    <a href="#" target="_blank">
+                        <div class="article_layout">
+                            <div class="article_title">文章标题</div>
+                        </div>
+                    </a>
+                </li> -->
+
+                <li class="article_box">
+                    <div class="article_thumb">
+                        <a href="#" target="_blank">
+                            <img src="__ROOT__/static/styler/images/cbd.jpg" alt="文章标题">
+                        </a>
+                    </div>
+                    <div class="article">
+                        <h3>
+                            <a href="#" target="_blank">文章标题</a>
+                        </h3>
+                        <div class="article_desc">文章标题文章标题文章标题文章文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题标题文章标题文章题文章标题文章标题文章标题</div>
+                        <div class="article_author">
+                            <span>文章标题</span>
+                            <span>2017-10-11</span>
+                            <i class="iconfont icon-read"></i> <em>11</em>
+                            <i class="iconfont icon-star"></i> <em>20</em>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </li>
+
+                <li class="article_box">
+                    <div class="article_thumb">
+                        <a href="#" target="_blank">
+                            <img src="__ROOT__/static/styler/images/cbd.jpg" alt="文章标题">
+                        </a>
+                    </div>
+                    <div class="article">
+                        <h3>
+                            <a href="#" target="_blank">文章标题</a>
+                        </h3>
+                        <div class="article_desc">文章标题文章标题文章标题文章文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题标题文章标题文章题文章标题文章标题文章标题</div>
+                        <div class="article_author">
+                            <span>文章标题</span>
+                            <span>2017-10-11</span>
+                            <i class="iconfont icon-read"></i> <em>11</em>
+                            <i class="iconfont icon-star"></i> <em>20</em>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </li>
+
+                <li class="article_box">
+                    <div class="article_thumb">
+                        <a href="#" target="_blank">
+                            <img src="__ROOT__/static/styler/images/cbd.jpg" alt="文章标题">
+                        </a>
+                    </div>
+                    <div class="article">
+                        <h3>
+                            <a href="#" target="_blank">文章标题</a>
+                        </h3>
+                        <div class="article_desc">文章标题文章标题文章标题文章文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题标题文章标题文章题文章标题文章标题文章标题</div>
+                        <div class="article_author">
+                            <span>文章标题</span>
+                            <span>2017-10-11</span>
+                            <i class="iconfont icon-read"></i> <em>11</em>
+                            <i class="iconfont icon-star"></i> <em>20</em>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            </ul>
+            <div class="page-more" id="page_more">
+                <button type="button" id="page_button">点击加载更多</button>
+            </div>
+        </div>
+
+        <!-- 右侧推荐 -->
+        <div class="content-right">
+            <!-- <div class="right-img">
+                <img src="">
+            </div> -->
+            
+            <div class="ad-box">
+                <div class="ad-title">
+                    <h3>栏目名称</h3>
+                    <span><a href="#">全部</a></span>
+                    <label></label>
+                    <div class="clear"></div>
+                </div>
+                <ul class="ad-list">
+                    <li>
+                        <h3><a href="#">文章标题</a></h3>
+                        <p>2017-10-11</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <script>
+        $(function(){
+            modList.init();
+        });
+
+        $("#page_more").on("click", "#page_button", function(){
+            modList.doBindPage();
+        });
+
+        var modList = {
+            _param: {"cid": ""},
+            init: function(){
+                this.setPage();
+                this.setPageButton();
+            },
+            setPage: function(){
+                this._page = {"page": "", "pages": ""};
+            },
+            doBindPage: function(){
+                var _this = this;
+                if (_this._page["page"] < _this._page["pages"]) {
+                    _this._page["page"]++;
+
+                    var data = _this._param;
+                    data["page"] = _this._page["page"];
+
+                    $("#page_more").empty().html('<button type="button">正在加载...</button>');
+                    zu_ajax({
+                        url: "",
+                        data: data,
+                        success: function(r){
+                            ztemplate("temp_article_list", {list: r["list"]}, "#article_list", "append");
+                            _this.setPageButton();
+                        } 
+                    });
+                }
+            },
+            setPageButton: function(){
+                if (this._page["page"] >= this._page["pages"]) {
+                    $("#page_more").empty();
+                    // $("#page_more").empty().html('<button type="button">没有更多数据了</button>');
+                } else {
+                    $("#page_more").empty().html('<button type="button" id="page_button">点击加载更多</button>');
+                }
+            }
+        };
+    </script>
+</body>
+</html>

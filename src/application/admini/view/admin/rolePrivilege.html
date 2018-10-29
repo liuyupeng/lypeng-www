@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>编辑管理员信息</title>
+
+	<{include file="public:loader" /}>
+</head>
+<body>
+	<div class="animated fadeInRight">
+		<div class="content-box">
+			<div class="alert alert-success">
+				<b>权限配置：</b> <{$adminRole.name}> <small><{$adminRole.description}></small>
+			</div>
+
+			<form role="form" id="dataForm">
+				<{volist name="privilegeGroupList" id="group"}>
+				<div class="ibox">
+				    <div class="ibox-title">
+				        <h5>
+				        	<input type="checkbox" class="checkall" style="position: relative; top: 1px;"/>
+				        	<{$group.name}> <small><{$group.code}></small>
+				        </h5>
+
+				        <div class="ibox-tools">
+	                        <a class="collapse-link btn_close">
+	                            <i class="fa fa-angle-double-down" style="font-size: 18px; color: #777;"></i>
+	                        </a>
+	                    </div>
+				    </div>
+
+					<div class="ibox-content" style="padding-bottom: 0;">
+					    <div class="row">
+					    	<{volist name="group.privilegeList" id="privilege"}>
+					    	<div class="form-group col-sm-4">
+						    	<div class="input-group">
+						    		<span class="input-group-addon">
+						    			<?php $checked = $privilege['is_checked'] ? 'checked' : '';?>
+						    			<input type="checkbox" name="privileges" class="checkbox" value="<{$privilege.id}>" <{$checked}> />
+						    		</span>
+						    		<span class="form-control" readonly><{$privilege.name}></span>
+				                </div>
+						    </div>
+						    <{/volist}>
+
+					    	<div style="clear: both;"></div>
+					    </div>
+				    </div>
+				</div>
+				<{/volist}>
+
+				<div class="form-group" style="text-align: center;">
+	                <button class="btn btn-default m-r-md" type="button" onclick="formItem.doReset()">
+	                	<strong> 重 置 表 单 </strong>
+	                </button>
+
+	                <button class="btn btn-info" type="button" onclick="formItem.doSubmit()">
+	                	<strong> 确 认 提 交 </strong>
+	                </button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var icon_left = "fa-angle-double-left";
+		var icon_down = "fa-angle-double-down";
+
+		$(document).ready(function(){
+			// 分组展开-关闭
+			$("#dataForm").on("click", ".btn_close", function(){
+				var $children = $(this).find("i");
+				var $content = $(this).parents(".ibox").find(".ibox-content");
+
+				if ($children.hasClass(icon_down)) {
+					$children.removeClass(icon_down).addClass(icon_left);
+					$content.slideUp();
+				} else {
+					$children.removeClass(icon_left).addClass(icon_down);
+					$content.slideDown();
+				}
+			});
+
+			// 全选-取消全选
+			$("#dataForm").on("click", ".checkall", function(){
+				var $content = $(this).parents(".ibox").find(".ibox-content");
+
+				var checked = $(this).prop("checked");
+				$content.find(".checkbox").each(function(){
+					$(this).prop("checked", checked);
+				});
+			});
+
+			// 权限选择-取消
+			$("#dataForm").on("click", ".checkbox", function(){
+				var $ibox = $(this).parents(".ibox");
+				var checked = $(this).prop("checked");
+				if (checked == undefined || checked == false) {
+					$ibox.find(".checkall").prop("checked", false);
+				} else {
+					formItem.setCheckAll($ibox);
+				}
+			});
+			
+			formItem.init();
+		});
+
+		var formItem = {
+			init: function(){
+				$(".ibox").each(function(){
+					formItem.setCheckAll($(this));
+				});
+			},
+			setCheckAll: function($targetIbox){
+				var checkedNum = 0;
+				$checkbox = $targetIbox.find(".checkbox");
+				$checkbox.each(function(){
+					var checked = $(this).prop("checked");
+					if (checked == true || checked == 'checked') {
+						checkedNum++;
+					}
+				});
+
+				if (checkedNum == $checkbox.length) {
+					$targetIbox.find(".checkall").prop("checked", true);
+				}
+			},
+			doReset: function(){
+				$.confirm({
+            		content: "确定要重置表单吗？",
+            		confirm: function(){
+						$("#dataForm")[0].reset();
+            		}
+            	});
+			},
+			doSubmit: function(){
+				var that = this;
+				var privileges = [];
+				$("#dataForm").find(".checkbox").each(function(){
+					var checked = $(this).prop("checked");
+					if (checked == true || checked == 'checked') {
+						privileges.push(this.value);
+					}
+				});
+
+				var len = privileges.length;
+				$.confirm({
+            		content: (len == 0 ? "您未选择任何权限" : "您选择了 <b>" + len + "</b> 项权限") + "，确定要提交吗？",
+            		confirm: function(){
+						that.doRequest(privileges);
+            		}
+            	});
+			},
+			doRequest: function(privileges){
+				h5.toast("正在处理请求...");
+				h5.ajax("<?= url('roleEditPrivilege')?>", {
+					data: {role_id: "<{$adminRole.id}>", privileges: privileges},
+					success: function(result){
+						if (result.res == 1) {
+							h5View.close();
+						} else {
+							h5.error(result.msg);
+						}
+					}
+				});
+			}
+		};
+	</script>
+</body>
+</html>

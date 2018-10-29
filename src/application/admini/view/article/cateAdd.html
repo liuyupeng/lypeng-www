@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>新增栏目</title>
+
+	<{include file="public:loader" /}>
+</head>
+<body class="animated fadeInRight">
+		
+	<div class="content-box">
+		<div class="alert alert-warning">注：所属栏目提交后不能更改。</div>
+
+		<form role="form" id="dataForm">
+			<div class="ibox">
+			    <div class="ibox-title">
+			        <h5>编辑栏目信息 <small></small></h5>
+			    </div>
+
+			    <div class="ibox-content pad0">
+				    <table class="table-flex">
+			    		<tr>
+			    			<th>栏目名称：</th>
+			    			<td class="form-group">
+			    				<input type="text" placeholder="请输入栏目名称" class="form-control md" autocomplete="off" v-model="form_data.name" />
+			    			</td>
+			    		</tr>
+
+			    		<tr>
+			    			<th>所属栏目：</th>
+			    			<td class="form-group">
+			    				<select class="form-control md" v-model="form_data.parent_id">
+				                	<option value="">作为一级栏目</option>
+				                	<template v-for="item in parentList">
+				                		<option v-bind:value="item.id">{{item.name}}</option>
+				                	</template>
+				                </select>
+			    			</td>
+			    		</tr>
+
+			    		<tr>
+			    			<th>栏目描述：</th>
+			    			<td class="form-group">
+			    				<textarea class="form-control xxl" v-model="form_data.description" placeholder="请输入栏目描述" style="height: 65px;"></textarea>
+			    			</td>
+			    		</tr>
+
+			    		<tr>
+			    			<th>列表排序：</th>
+			    			<td class="form-group">
+			    				<input type="number" min="0" max="9999" placeholder="请输入排序" class="form-control sm" autocomplete="off" v-model="form_data.listorder">
+			    			</td>
+			    		</tr>
+
+			    		<tr>
+			    			<th></th>
+			    			<td class="form-group">
+			    				<button class="btn btn-info" type="button" onclick="formItem.doRequest()">
+				                	<strong> 确 认 提 交 </strong>
+				                </button>
+			    			</td>
+			    		</tr>
+				    </table>
+			    </div>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+		var _VUE = {};
+		$(document).ready(function(){
+			_VUE = new Vue({
+				el: "#dataForm",
+				data: {
+					parentList : [],
+					form_data: {
+						name: "",
+						parent_id: "",
+						description: "",
+						listorder: "",
+						disabled: "0"
+					}
+				}
+			});
+
+			formItem.init();
+		});
+
+		var formItem = {
+			init: function(){
+				this.setPrentList();
+			},
+			setPrentList: function(){
+				h5.ajax("<{:url('cateAll')}>", {
+					data: {parent_id: 0},
+					success: function(result){
+						if (result.res == 1) {
+							_VUE["parentList"] = result.data;
+						}
+					}
+				});
+			},
+			doRequest: function(){
+				h5.toast("正在处理请求...");
+				h5.ajax("<?= url('cateAdd')?>", {
+					data: _VUE.form_data,
+					success: function(result){
+						if (result.res == 1) {
+							h5Notify.publish("cate_list_refresh");
+							h5View.close();
+						} else {
+							h5.error(result.msg);
+						}
+					}
+				});
+			}
+		};
+	</script>
+</body>
+</html>

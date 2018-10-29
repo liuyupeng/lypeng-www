@@ -1,0 +1,74 @@
+<div class="modal h5model in fade" id="saveModal" role="dialog">
+    <div class="modal-dialog modal-md" style="width: 480px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">编辑球员信息</h4>
+            </div>
+            <div class="modal-body" style="padding: 15px 15px 0;">
+            	<form role="form" id="dataForm">
+            		<input type="hidden" name="id" id="player_id" />
+		        	<div class="form-group">
+		                <label>姓名</label>
+		                <input type="text" placeholder="请输入球员名称" class="form-control" id="player_name" autocomplete="off" />
+		            </div>
+
+		            <div class="form-group">
+		                <label>英文名</label>
+		                <input type="text" placeholder="请输入球员英文名称" class="form-control" id="player_name_eng" autocomplete="off" />
+		            </div>
+
+		            <div class="form-group">
+		                <label>进入联盟</label>
+		                <input type="text" placeholder="请输入进入联盟时间" class="form-control" id="player_league_in" autocomplete="off" />
+		            </div>
+		        </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary dialog_btn_submit">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#saveModal").on("click", ".dialog_btn_submit", function(){
+			var dataForm = {};
+			dataForm["id"] = $("#player_id").val();
+			dataForm["name"] = $("#player_name").val();
+			dataForm["name_eng"] = $("#player_name_eng").val();
+			dataForm["league_in"] = $("#player_league_in").val();
+
+			if (dataForm["name"] != "") {
+				h5.toast("正在操作...");
+				h5.ajax("<{:url('save')}>", {
+					data: dataForm,
+					success: function(r){
+						if (r.res == 0) {
+							h5.error(r.msg);
+						} else {
+							h5.success(r.msg);
+							$('#saveModal').modal('hide');
+							$("#tableList").bootstrapTable("refresh");
+						}
+					}
+				});
+			} else {
+				h5.error("请先输入球员名称");
+			}
+		}); 
+
+		$("#saveModal").on("hide.bs.modal", function(){
+			setDataForm({});
+        });
+	});
+
+	function setDataForm(row){
+		$("#player_id").val(row["id"] || "");
+		$("#player_name").val(row["name"] || "");
+		$("#player_name_eng").val(row["name_eng"] || "");
+		$("#player_league_in").val(row["league_in"] || "");
+	}
+</script>

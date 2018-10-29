@@ -1,0 +1,41 @@
+<?php
+    use yii\helpers\Url;
+?>
+
+<div class="modal h5model in fade" id="selectTag" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择标签</h4>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <iframe src="<{:url('tag/select')}>" style="width: 100%; height: 360px; margin: 0; padding: 0; border: none;" name="selectTagIframe"></iframe>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary dialog_btn_submit">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $("#selectTag").on("click", ".dialog_btn_submit", function(){
+            var canClose = true;
+            var tagList = window.selectTagIframe.iframeCallback();
+            if (selectTagCallback != undefined && typeof(selectTagCallback) == "function") {
+                canClose = selectTagCallback(tagList);
+            }
+
+            if (canClose == true) {
+                $('#selectTag').modal('hide');
+            }
+        });
+
+        // 监听显示
+        $("#selectArea").on("show.bs.modal", function(){
+        });
+    });
+</script>

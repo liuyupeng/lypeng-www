@@ -1,0 +1,63 @@
+	
+	<!-- 引入全局样式表 -->
+	<link rel="stylesheet" href="__ROOT__/static/fontawesome/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="__ROOT__/static/styler/css/www/base.css" type="text/css">
+
+    <!-- 引入全局JS -->
+    <script src="__ROOT__/static/styler/js/jquery-1.11.3.min.js"></script>
+    <script src="__ROOT__/static/vue/vue.min.js"></script>
+
+    <style type="text/css">
+    	
+    </style>
+
+    <script type="text/javascript">
+    	$(function(){
+
+            // 搜索
+            $("header").on("click", ".search_btn", function(){
+                var keywords = $("header").find(".search_keywords").val();
+
+                if (keywords != "") {
+                    window.location.href = "<{:url('index')}>?timestamp=<{:time()}>&keywords=" + keywords;
+                }
+            });
+
+            // 回车键按下
+            $(document).keyup(function(e){
+                if (e.keyCode == 13) {
+                    $("header").find(".search_btn")[0].click();
+                }
+            });
+
+
+    		var personal_topp = $("#personal-box").offset().top;
+    		if ($("body.position-fixed").length == 0) {
+    			personal_topp -= 10;
+    		} else {
+    			personal_topp -= 66;
+    		}
+
+    		$(document).scroll(function(){
+    			var topp = $(document).scrollTop();
+
+    			if (topp >= personal_topp) {
+    				$("#personal-box").addClass("position");
+    			} else {
+    				$("#personal-box").removeClass("position");
+    			}
+
+                if (topp >= 500) {
+                    $(".scroll-topp").fadeIn(800);
+                } else {
+                    $(".scroll-topp").fadeOut(800);
+                }
+    		});
+
+            $(".scroll-topp").click(function(){
+                $("body,html").animate({
+                    scrollTop: 0
+                }, 500);
+            });
+    	});
+    </script>

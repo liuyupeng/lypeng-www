@@ -1,0 +1,88 @@
+<div class="modal h5model in fade" id="saveModal" role="dialog">
+    <div class="modal-dialog modal-md" style="width: 480px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">编辑球队信息</h4>
+            </div>
+            <div class="modal-body" style="padding: 15px 15px 0;">
+            	<form role="form" id="dataForm">
+            		<input type="hidden" name="id" id="team_id" />
+		        	<div class="form-group">
+		                <label>名称</label>
+		                <input type="text" placeholder="请输入球队名称" class="form-control" id="team_name" autocomplete="off" />
+		            </div>
+
+		            <div class="form-group">
+		                <label>英文名</label>
+		                <input type="text" placeholder="请输入球队英文名称" class="form-control" id="team_name_eng" autocomplete="off" />
+		            </div>
+
+
+		            <div class="row">
+			            <div class="form-group col-sm-6">
+			                <label>城市</label>
+			                <input type="text" placeholder="请输入城市" class="form-control" id="team_city" autocomplete="off" />
+			            </div>
+
+			            <div class="form-group col-sm-6">
+			                <label>分区</label>
+			                <select class="form-control" id="team_location">
+			                	<option value="">选择分区</option>
+			                	<option value="East">东部</option>
+			                	<option value="West">西部</option>
+			                </select>
+			            </div>
+		            </div>
+		        </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary dialog_btn_submit">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#saveModal").on("click", ".dialog_btn_submit", function(){
+			var dataForm = {};
+			dataForm["id"] = $("#team_id").val();
+			dataForm["name"] = $("#team_name").val();
+			dataForm["name_eng"] = $("#team_name_eng").val();
+			dataForm["city"] = $("#team_city").val();
+			dataForm["location"] = $("#team_location").val();
+
+			if (dataForm["name"] != "") {
+				h5.toast("正在操作...");
+				h5.ajax("<{:url('save')}>", {
+					data: dataForm,
+					success: function(r){
+						if (r.res == 0) {
+							h5.error(r.msg);
+						} else {
+							h5.success(r.msg);
+							$('#saveModal').modal('hide');
+							$("#tableList").bootstrapTable("refresh");
+						}
+					}
+				});
+			} else {
+				h5.error("请先输入球队名称");
+			}
+		}); 
+
+		$("#saveModal").on("hide.bs.modal", function(){
+			setDataForm({});
+        });
+	});
+
+	function setDataForm(row){
+		$("#team_id").val(row["id"] || "");
+		$("#team_name").val(row["name"] || "");
+		$("#team_name_eng").val(row["name_eng"] || "");
+		$("#team_city").val(row["city"] || "");
+		$("#team_location").val(row["location"] || "");
+	}
+</script>

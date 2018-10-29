@@ -1,0 +1,85 @@
+<div class="modal h5model in fade" id="saveModal" role="dialog">
+    <div class="modal-dialog modal-md" style="width: 480px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">编辑赛季信息</h4>
+            </div>
+            <div class="modal-body" style="padding: 15px 15px 0;">
+            	<form role="form" id="dataForm">
+            		<input type="hidden" name="id" id="season_id" />
+		        	<div class="form-group">
+		                <label>名称</label>
+		                <input type="text" placeholder="请输入赛季名称" class="form-control" id="season_name" autocomplete="off" />
+		            </div>
+
+		            <div class="row">
+		            	<div class="form-group col-sm-6">
+		            		<label>开始日期</label>
+			                <div class="input-group date" id="season_begin_date">
+			                    <div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div>
+			                    <input type="text" class="form-control" placeholder="开始日期" readonly />
+			                </div>
+			            </div>
+
+			            <div class="form-group col-sm-6">
+			            	<label>结束日期</label>
+			                <div class="input-group date" id="season_end_date">
+			                    <div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div>
+			                    <input type="text" class="form-control" placeholder="结束日期" readonly />
+			                </div>
+			            </div>
+		            </div>
+		        </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary dialog_btn_submit">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#season_begin_date").datepicker();
+		$("#season_end_date").datepicker();
+
+		$("#saveModal").on("click", ".dialog_btn_submit", function(){
+			var dataForm = {};
+			dataForm["id"] = $("#season_id").val();
+			dataForm["name"] = $("#season_name").val();
+			dataForm["begin_date"] = $("#season_begin_date").find("input").val();
+			dataForm["end_date"] = $("#season_end_date").find("input").val();
+
+			if (dataForm["name"] != "") {
+				h5.toast("正在操作...");
+				h5.ajax("<{:url('save')}>", {
+					data: dataForm,
+					success: function(r){
+						if (r.res == 0) {
+							h5.error(r.msg);
+						} else {
+							h5.success(r.msg);
+							$('#saveModal').modal('hide');
+							$("#tableList").bootstrapTable("refresh");
+						}
+					}
+				});
+			} else {
+				h5.error("请先输入赛季名称");
+			}
+		}); 
+
+		$("#saveModal").on("hide.bs.modal", function(){
+			// setDataForm({});
+        });
+	});
+
+	function setDataForm(row){
+		$("#season_id").val(row["id"] || "");
+		$("#season_name").val(row["name"] || "");
+		$("#season_begin_date").datepicker("setDate", row["begin_date"] || "");
+		$("#season_end_date").datepicker("setDate", row["end_date"] || "");
+	}
+</script>

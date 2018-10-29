@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+
+	<link rel="stylesheet" href="__ROOT__/static/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="__ROOT__/static/summernote/summernote.css" />
+
+	<script src="__ROOT__/static/bootstrap/js/jquery-1.11.3.min.js"></script>
+	<script src="__ROOT__/static/bootstrap/js/bootstrap.min.js"></script>
+	<script src="__ROOT__/static/summernote/summernote.js"></script>
+	<script src="__ROOT__/static/summernote/lang/summernote-zh-CN.min.js"></script>
+	<script src="__ROOT__/static/styler/js/h5.wap.js"></script>
+	<script src="__ROOT__/static/vue/vue.min.js"></script>
+</head>
+<body>
+	<div style="padding: 20px;" id="dataForm">
+		<textarea class="summernote"></textarea>
+
+		<button type="button">提交</button>
+	</div>
+	
+	<script type="text/javascript">
+		$(function() {
+
+			var _VUE = new Vue({
+                el: "#dataForm",
+                data: {
+                    form_data: {
+                        content: "",
+                        content2: "",
+                    }
+                }
+            });
+
+			var summernoteBox = h5.summernote(".summernote");
+            // var summernoteBox = $(".summernote").summernote();
+
+            $("button").click(function(){
+			});
+
+
+		});
+
+	</script>
+</body>
+</html>

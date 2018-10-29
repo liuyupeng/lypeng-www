@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>编辑管理员信息</title>
+
+	<{include file="public:loader" /}>
+</head>
+<body class="animated fadeInRight">
+	<div class="content-box">
+		<div class="alert alert-warning">
+			注：账号用于登录，唯一并且添加后不能更改。
+			<font class="red">*</font> 为必填项。
+		</div>
+
+		<form role="form" id="dataForm">
+			<div class="ibox">
+			    <div class="ibox-title">
+			        <h5 v-if="form_data.id">编辑管理员信息 <small></small></h5>
+			        <h5 v-else>新增管理员 <small></small></h5>
+			    </div>
+
+				<div class="ibox-content pad0">
+				    <table class="table-flex">
+			    		<tr class="form-group">
+			    			<th class="form-left"><font class="red">*</font> 账号：</th>
+			    			<td class="form-right">
+			    				<input type="text" class="form-control md" readonly v-model="form_data.account" v-if="form_data.id" />
+			    				<input type="text" placeholder="请输入账号" class="form-control md" autocomplete="off" v-model="form_data.account" v-else />
+			    			</td>
+			    		</tr>
+
+			    		<tr class="form-group">
+			    			<th class="form-left"><font class="red">*</font> 用户名：</th>
+			    			<td class="form-right">
+			    				<input type="text" placeholder="请输入用户名" class="form-control md" autocomplete="off" v-model="form_data.username" />
+			    			</td>
+			    		</tr>
+
+			    		<tr class="form-group">
+			    			<th class="form-left"><font class="red">*</font> 用户角色：</th>
+			    			<td class="form-right">
+			    				<?php $disabled = isset($info) && $info->is_admin == 1 ? 'disabled' : '';?>
+			    				<select class="form-control md" v-model="form_data.role_id" <{$disabled}>>
+			    					<option value="">选择用户角色</option>
+				                	<{volist name="roleList" id="role"}>
+				                		<option value="<{$role.id}>"><{$role.name}></option>
+				                	<{/volist}>
+			    				</select>
+			    			</td>
+			    		</tr>
+
+			    		<tr class="form-group">
+			    			<th class="form-left">用户备注：</th>
+			    			<td class="form-right">
+			    				<textarea class="form-control xxl" v-model="form_data.description" placeholder="请输入用户备注" style="height: 65px;"></textarea>
+			    			</td>
+			    		</tr>
+
+			    		<tr class="form-group">
+			    			<th class="form-left"></th>
+			    			<td class="form-right">
+			    				<button class="btn btn-info" type="button" onclick="formItem.doRequest()">
+				                	<strong> 确 认 提 交 </strong>
+				                </button>
+			    			</td>
+			    		</tr>
+				    </table>
+			    </div>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+		var _VUE = {};
+		$(document).ready(function(){
+			_VUE = new Vue({
+				el: "#dataForm",
+				data: {
+					form_data: {
+						id: "<{$info.id ?? ''}>",
+						account: "<{$info.account ?? ''}>",
+						username: "<{$info.username ?? ''}>",
+						role_id: "<{$info.role_id ?? ''}>",
+						description: "<{$info.description ?? ''}>",
+					}
+				}
+			});
+		});
+
+		var formItem = {
+			init: function(){
+			},
+			doRequest: function(){
+				h5.toast("正在处理请求...");
+				h5.ajax("<?= url('save')?>", {
+					data: _VUE.form_data,
+					success: function(result){
+						if (result.res == 1) {
+							h5Notify.publish("admin_search_refresh");
+							h5View.close();
+						} else {
+							h5.error(result.msg);
+						}
+					}
+				});
+			}
+		};
+	</script>
+</body>
+</html>

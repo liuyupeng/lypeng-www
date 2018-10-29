@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>编辑栏目信息</title>
+
+	<{include file="public:loader" /}>
+</head>
+<body class="animated fadeInRight">
+	<div class="content-box">
+		<div class="alert alert-warning">注：所属栏目不能更改。</div>
+
+		<form role="form" id="dataForm">
+			<div class="ibox">
+			    <div class="ibox-title">
+			        <h5>编辑栏目信息 <small></small></h5>
+			    </div>
+
+				<div class="ibox-content pad0">
+				    <table class="table-flex">
+			    		<tr class="form-group">
+			    			<th class="form-left">栏目名称：</th>
+			    			<td class="form-right">
+			    				<input type="text" placeholder="请输入栏目名称" class="form-control md" autocomplete="off" v-model="form_data.name" />
+			    			</td>
+			    		</tr>
+
+			    		<tr class="form-group">
+			    			<th class="form-left">所属栏目：</th>
+			    			<td class="form-right">
+			    				<input type="text" placeholder="最上级栏目" class="form-control md" readonly v-model="form_data.parent_name">
+			    			</td>
+			    		</tr>
+
+			    		<tr class="form-group">
+			    			<th class="form-left">栏目描述：</th>
+			    			<td class="form-right">
+			    				<textarea class="form-control xxl" v-model="form_data.description" placeholder="请输入栏目描述" style="height: 65px;"></textarea>
+			    			</td>
+			    		</tr>
+
+			    		<tr class="form-group">
+			    			<th class="form-left">列表排序：</th>
+			    			<td class="form-right">
+			    				<input type="number" min="0" max="9999" placeholder="请输入排序" class="form-control sm" autocomplete="off" v-model="form_data.listorder">
+			    			</td>
+			    		</tr>
+
+			    		<tr class="form-group">
+			    			<th class="form-left"></th>
+			    			<td class="form-right">
+			    				<button class="btn btn-info" type="button" onclick="formItem.doRequest()">
+				                	<strong> 确 认 提 交 </strong>
+				                </button>
+			    			</td>
+			    		</tr>
+				    </table>
+			    </div>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+		var _VUE = {};
+		$(document).ready(function(){
+			_VUE = new Vue({
+				el: "#dataForm",
+				data: {
+					form_data: {
+						id: "<{$info.id}>",
+						name: "<{$info.name}>",
+						parent_name: "<{$parent_info.name ?? ''}>",
+						description: "<{$info.description}>",
+						listorder: "<{$info.listorder}>",
+						disabled: "<{$info.disabled}>"
+					}
+				}
+			});
+		});
+
+		var formItem = {
+			init: function(){
+			},
+			doRequest: function(){
+				h5.toast("正在处理请求...");
+				h5.ajax("<?= url('cateEdit')?>", {
+					data: _VUE.form_data,
+					success: function(result){
+						if (result.res == 1) {
+							h5Notify.publish("cate_list_refresh");
+							h5View.close();
+						} else {
+							h5.error(result.msg);
+						}
+					}
+				});
+			}
+		};
+	</script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>文章列表</title>
+
+	<{include file="public:loader,public:tables" /}>
+</head>
+
+<body>
+	<div class="animated fadeInRight">
+		<div class="content-box" id="_VUE_BOX">
+			<div class="alert alert-success"><b>文章列表</b> <small>文章取消显示后才能删除，删除后不可恢复。</small></div>
+			<div class="ibox m-b-sm" id="dataForm">
+			    <div class="ibox-title">
+			        <h5>查询选项</h5>
+
+			        <div class="ibox-tools">
+			            <span class="label" id="btn_clear"><i class="fa fa-eraser"></i> 清除条件</span>
+			            <span class="label label-primary" id="btn_search"><i class="fa fa-search"></i> 提交查询</span>
+			        </div>
+			    </div>
+
+			    <div class="ibox-content" style="padding-bottom: 3px;">
+			    	<div class="row">
+				    	<div class="form-group col-sm-4">
+							<div class="input-group">
+			                    <div class="input-group-addon"><span class="glyphicon glyphicon-tags"></span></div>
+			                    <select class="form-control" id="select_category">
+					                <option value="">选择文章栏目</option>
+					                <template v-for="item in categoryList">
+					                	<option v-bind:value="item.id">{{item.name}}</option>
+					                </template>
+					            </select>
+			                </div>
+				        </div>
+
+				        <div class="form-group col-sm-4">
+				            <div class="input-group">
+							    <div class="input-group-addon"><span class="glyphicon glyphicon-tags"></span></div>
+							    <select class="form-control" id="select_cateid">
+					                <option value="">选择文章栏目</option>
+					                <template v-for="item in cateList">
+					                	<option v-bind:value="item.id">{{item.name}}</option>
+					                </template>
+					            </select>
+							</div>
+				        </div>
+
+				        <div class="form-group col-sm-4">
+				            <div class="input-group">
+							    <div class="input-group-addon"><span class="glyphicon glyphicon-adjust"></span></div>
+							    <select class="form-control" v-model="form_data.is_show">
+					                <option value="all">显示状态</option>
+				                	<option value="1">显示</option>
+				                	<option value="0">隐藏</option>
+					            </select>
+							</div>
+				        </div>
+			    	</div>
+			    </div>
+			</div>
+		
+			<div class="table-responsive">
+			    <div class="btn-group" id="toolbarList" role="group">
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doAdd()">
+			            <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 新增
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doEdit()">
+			            <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> 编辑
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doActived(1)">
+			            <i class="glyphicon glyphicon-eye-open" aria-hidden="true"></i> 展示
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doActived(0)">
+			            <i class="glyphicon glyphicon-eye-close" aria-hidden="true"></i> 隐藏
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doDelete()">
+			            <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> 删除
+			        </button>
+
+			        <button type="button" class="btn btn-outline btn-default" onclick="tableItems.doWeight()">
+			            <i class="glyphicon glyphicon-retweet" aria-hidden="true"></i> 更新权重
+			        </button>
+			    </div>
+
+			    <table id="tableList">
+			        <thead>
+			            <tr>
+			                <th data-field="ids" data-align="center" data-checkbox="true"></th>
+			                <th data-field="index" data-align="center" data-formatter="h5.formatter.index" data-width="80">编号</th>
+			                <th data-field="title">标题</th>
+			                <th data-field="cate_id" data-formatter="tableItems.cateName">所属栏目</th>
+			                <th data-field="author" data-align="center">作者</th>
+			                <th data-field="read_num" data-align="center">阅读数</th>
+			                <th data-field="zan_num" data-align="center">点赞数</th>
+			                <th data-field="listorder" data-align="center">排序</th>
+			                <th data-field="date" data-align="center" data-sortable="true">添加时间</th>
+			                <th data-field="dateline" data-visible="false" data-align="center" data-sortable="true">更新时间</th>
+			                <th data-field="is_show" data-align="center" data-formatter="tableItems.actived">状态</th>
+			            </tr>
+			        </thead>
+			    </table>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	    $(function(){
+	    	_VUE = new Vue({
+				el: "#_VUE_BOX",
+				data: {
+					categoryList: [],
+					cateList: [],
+					form_data: {
+						is_show: "1",
+						cate_id: 0
+					}
+				}
+			});
+
+	        h5.initTable("#tableList", {
+	            url: "<?= Url('articleList')?>",
+	            toolbar: "#toolbarList",
+	            singleSelect: true,
+	            sortName: "weight",
+            	sortOrder: "desc",
+	            sidePagination: "server",
+	            rowStyle: function (row, index) {
+	            	var obj = {};
+	            	if (row["is_show"] == 0) {
+						obj["css"] =  {color: "#999999"};
+	            	}
+
+	            	return obj;
+				}
+	        }, function(){
+	        	return _VUE["form_data"];
+	        });
+
+	        tableItems.setCategoryList();
+
+	        // 一级栏目改变事件
+	        $("#select_category").change(function(){
+	        	_VUE["form_data"]["cate_id"] = this.value;
+	        	$("#select_cateid").val("");
+	        	tableItems.setCateList(_VUE["form_data"]["cate_id"]);
+	        });
+
+	        // 二级栏目改变事件
+	        $("#select_cateid").change(function(){
+	        	if (this.value == "") {
+	        		_VUE["form_data"]["cate_id"] = $("#select_category").val();
+	        	} else {
+	        		_VUE["form_data"]["cate_id"] = this.value;
+	        	}
+	        });
+
+	        // 清除条件
+	        $("#btn_clear").click(function(){
+	            _VUE["form_data"] = {
+	            	is_show: "1",
+					cate_id: 0
+	            };
+
+	            $("#select_cateid").val("");
+	            $("#select_category").val("");
+	            $("#tableList").bootstrapTable("refresh");
+	        });
+
+			// 提交查询
+			$("#btn_search").click(function(){
+				$("#tableList").bootstrapTable("refresh");
+			});
+
+	        h5Notify.listen("article_list_refresh", function(){
+	        	$("#tableList").bootstrapTable("refresh");
+	        });
+	    });
+
+	    var tableItems = {
+	    	actived: function(val, row, index){
+	    		return val == 1 ? "显示" : "隐藏";
+	    	},
+	    	cateName: function(val, row, index){
+	    		return row.cate_info ? row.cate_info.name : "--";
+	    	},
+	        doAdd: function(){
+	        	h5View.open("<?= Url('articleAdd')?>", "新增文章");
+	        },
+	        doEdit: function(){
+	            var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	        		h5View.open("<?= Url('articleEdit')?>?id="+rows[0]["id"], "编辑文章信息");
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        },
+	        doActived: function(actived){
+	        	var tip = actived == 1 ? "展示" : "取消展示";
+	        	var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	            	if (rows[0]["is_show"] == actived) {
+	            		h5.warning("该文章已是" + tip + "状态");
+	            	} else {
+		            	$.confirm({
+		            		content: "确定要"+tip+"该文章吗？",
+		            		confirm: function(){
+		            			h5.toast("正在操作...");
+				            	h5.ajax("<{:url('articleActived')}>", {
+				            		data: {id: rows[0]["id"], actived: actived},
+				            		success: function(r){
+				            			if (r.res == 1) {
+				            				h5.success(r.msg);
+				            				$("#tableList").bootstrapTable("refresh");
+				            			} else {
+				            				h5.error(r.msg);
+				            			}
+				            		}
+				            	});
+		            		}
+		            	});
+	            	}
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        },
+	        doDelete: function(){
+	        	var rows = $("#tableList").bootstrapTable("getSelections");
+	            if (rows.length == 1) {
+	            	$.confirm({
+	            		content: "确定要删除吗？",
+	            		confirm: function(){
+	            			h5.toast("正在操作...");
+			            	h5.ajax("<{:url('articleRemove')}>", {
+			            		data: {id: rows[0]["id"]},
+			            		success: function(r){
+			            			if (r.res == 1) {
+			            				h5.success(r.msg);
+			            				$("#tableList").bootstrapTable("refresh");
+			            			} else {
+			            				h5.error(r.msg);
+			            			}
+			            		}
+			            	});
+	            		}
+	            	});
+	            } else {
+	                h5.warning("请先选择一条要操作的信息");
+	            }
+	        },
+
+	        doWeight: function(){
+	        	h5.toast("正在操作...");
+            	h5.ajax("<{:url('articleWeight')}>", {
+            		success: function(r){
+            			if (r.res == 1) {
+            				h5.success(r.msg);
+            				$("#tableList").bootstrapTable("refresh");
+            			} else {
+            				h5.error(r.msg);
+            			}
+            		}
+            	});
+	        },
+
+	        setCategoryList: function(){
+				h5.ajax("<{:url('cateAll')}>", {
+					data: {parent_id: 0},
+					success: function(result){
+						if (result.res == 1) {
+							_VUE["categoryList"] = result.data;
+						}
+					}
+				});
+			},
+			setCateList: function(cate_id){
+				if (cate_id == "") {
+					_VUE["cateList"] = [];
+					return false;
+				}
+
+				h5.ajax("<{:url('cateAll')}>", {
+					data: {parent_id: cate_id},
+					success: function(result){
+						if (result.res == 1) {
+							_VUE["cateList"] = result.data;
+						}
+					}
+				});
+			}
+	    };
+	</script>
+</body>
+</html>

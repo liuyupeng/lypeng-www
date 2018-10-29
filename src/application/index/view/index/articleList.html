@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="telephone=no" name="format-detection" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>文章列表</title>
+
+    <link rel="stylesheet" href="__ROOT__/static/weui/weui.min.css"/>
+    <link rel="stylesheet" href="__ROOT__/static/weui/weui_example.css"/>
+    <link rel="stylesheet" href="__ROOT__/static/weui/jquery-weui.min.css"/>
+    <link rel="stylesheet" href="__ROOT__/static/styler/css/h5.web.css"/>
+</head>
+
+<body ontouchstart>
+    <div class="container">
+        <div class="page home js_show">
+        	<div class="weui-panel weui-panel_access">
+                <div class="weui-panel__hd"><{$title}> | <small><{$description}></small></div>
+
+                <div class="weui-panel__bd" id="itemList" style="display:none;">
+                    <div class="weui-media-box weui-media-box_text article_item" v-bind:id="item.uuid" v-for="item in articleList">
+                        <img v-bind:src="item.thumb" width="100%" onerror="this.remove();" v-if="item.thumb">
+                        <h4 class="weui-media-box__title">{{item.title}}</h4>
+                        <p class="weui-media-box__desc">{{item.description}}</p>
+                        <ul class="weui-media-box__info">
+                            <li class="weui-media-box__info__meta">{{item.cate_info.name}}</li>
+                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{item.author}}</li>
+                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{item.date_short}}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="weui-panel__ft" id="more_box_loading">
+	                <div class="weui-loadmore">
+					    <i class="weui-loading"></i>
+					    <span class="weui-loadmore__tips">正在加载</span>  
+					</div>
+				</div>
+
+                <div class="weui-panel__ft" id="more_box_loaded">
+                    <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+                        <div class="weui-cell__bd">查看更多</div>
+                        <span class="weui-cell__ft"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<script src="__ROOT__/static/styler/js/jquery-2.1.4.js"></script>
+	<script src="__ROOT__/static/weui/jquery-weui.min.js"></script>
+	<script src="__ROOT__/static/styler/js/h5.web.js"></script>
+	<script src="__ROOT__/static/vue/vue.min.js"></script>
+	<script type="text/javascript">
+		var _VUE = {};
+		
+        _VUE = new Vue({
+            el: ".container",
+            data: {
+                is_loading: false,
+                articleList: [],
+                form_data: {
+                	page: 1,
+                	tag_id: "<{$tag_id}>",
+                    cate_id: "<{$cate_id}>"
+                }
+            }
+        });
+
+        $(function(){
+            modList.doRebind();
+
+            // 加载更多
+            $("#more_box_loaded").click(function(){
+            	modList.doLoadMore();
+            });
+
+            // 跳转到详情页
+            $(".container").on("click", ".article_item", function(){
+                window.location.href="<{:url('articleInfo')}>?uuid=" + this.id;
+            });
+		});
+
+        var modList = {
+            doRequest: function(callback){
+            	if (_VUE["is_loading"] == true) return false;
+
+            	$("#more_box_loaded").hide();
+            	$("#more_box_loading").show();
+
+            	_VUE["is_loading"] = true;
+                h5.ajax("<{:url('articleList')}>", {
+                	data: _VUE["form_data"],
+                	success: function(result){
+                		callback(result.data.data);
+
+            			_VUE["is_loading"] = false;
+                		
+                		$("#more_box_loading").hide();
+                		if (result["data"]["has_more"] == 1) {
+                			$("#more_box_loaded").show();
+                		}
+                	}
+                });
+            },
+            doRebind: function(){
+            	_VUE["form_data"]["page"] = 1;
+            	this.doRequest(function(data){
+                    $("#itemList").show();
+            		_VUE["articleList"] = data;
+            	});
+            },
+            doLoadMore: function(){
+            	_VUE["form_data"]["page"]++;
+            	this.doRequest(function(data){
+            		for (var i in data) {
+	    				_VUE["articleList"].push(data[i]);
+	    			}
+            	});
+            }
+        };
+	</script>
+</body>
+</html>

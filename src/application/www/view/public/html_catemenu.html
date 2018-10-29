@@ -1,0 +1,15 @@
+    <ul class="container-left_menu">
+        <li class="menu_li <{:$left_cate_id == $nav_cate_id ? 'active' : ''}>">
+            <a href="<{:url('index')}>?cate_id=<{$nav_cate_id}>&timestamp=<{:time()}>">
+                全部
+            </a>
+        </li>
+
+        <{volist name="leftCateList" id="cate"}>
+            <li class="menu_li <{:$left_cate_id == $cate.id ? 'active' : ''}>">
+                <a href="<{:url('index')}>?cate_id=<{$cate.id}>&timestamp=<{:time()}>">
+                    <{$cate.name}>
+                </a>
+            </li>
+        <{/volist}>
+    </ul>

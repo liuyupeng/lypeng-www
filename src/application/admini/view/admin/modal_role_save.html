@@ -1,0 +1,68 @@
+<div class="modal h5model in fade" id="saveModal" role="dialog">
+    <div class="modal-dialog modal-md" style="width: 480px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">编辑角色信息</h4>
+            </div>
+            <div class="modal-body" style="padding: 15px 15px 0;">
+            	<form role="form" id="dataForm">
+            		<input type="hidden" name="id" id="role_id" />
+		        	<div class="form-group">
+		                <label>名称</label>
+		                <input type="text" placeholder="请输入账号" class="form-control" id="role_name" autocomplete="off" />
+		            </div>
+
+		            <div class="form-group">
+		                <label>描述</label>
+		                <textarea name="" placeholder="请输入角色描述" class="form-control" id="role_description"></textarea>
+		            </div>
+
+		        </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary dialog_btn_submit">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#saveModal").on("click", ".dialog_btn_submit", function(){
+			var dataForm = {};
+			dataForm["id"] = $("#role_id").val();
+			dataForm["name"] = $("#role_name").val();
+			dataForm["description"] = $("#role_description").val();
+
+			if (dataForm["name"] != "") {
+				h5.toast("正在操作...");
+				h5.ajax("<{:url('roleSave')}>", {
+					data: dataForm,
+					success: function(r){
+						if (r.res == 0) {
+							h5.error(r.msg);
+						} else {
+							h5.success(r.msg);
+							$('#saveModal').modal('hide');
+							$("#tableList").bootstrapTable("refresh");
+						}
+					}
+				});
+			} else {
+				h5.error("请先输入角色名称");
+			}
+		}); 
+
+		$("#saveModal").on("hide.bs.modal", function(){
+			setDataForm({});
+        });
+	});
+
+	function setDataForm(row){
+		$("#role_id").val(row["id"] || "");
+		$("#role_name").val(row["name"] || "");
+		$("#role_description").val(row["description"] || "");
+	}
+</script>
