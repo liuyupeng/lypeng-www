@@ -277,8 +277,8 @@ class IndexController extends CommonController{
 				'region' => "sh",
 	    		'credentials'=> array(
 			        'appId' => "1256381791",
-			        'secretId'    => "AKIDa0CAuPQslPp0wbO92fYGm22pMddNJCLI",
-			        'secretKey' => "yhFXbTBrLdP0LUN0MSHq8AwRffQvBCxR"
+			        'secretId'    => "",
+			        'secretKey' => ""
 			    )
 	    	));
 
